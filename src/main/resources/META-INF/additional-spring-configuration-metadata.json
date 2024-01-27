@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "spring.sql.init.encoding",
+      "type": "java.lang.String",
+      "description": "Description for spring.sql.init.encoding."
+    }
+  ]
+}
