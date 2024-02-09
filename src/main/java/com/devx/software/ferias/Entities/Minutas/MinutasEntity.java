@@ -73,7 +73,7 @@ public class MinutasEntity {
             inverseJoinColumns = @JoinColumn(name = "tarea_id")
     )
     private List<TaskEntity> minutaTareas = new ArrayList<>();
-
+    
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.MERGE})
     @JoinTable(
             name = "a_minuta__a_usuario",

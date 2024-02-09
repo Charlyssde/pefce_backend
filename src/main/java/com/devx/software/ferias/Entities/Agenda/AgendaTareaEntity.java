@@ -14,12 +14,12 @@ public class AgendaTareaEntity {
     private Long id;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "id_agenda")
+    @JoinColumn(name = "agenda_id")
     @JsonBackReference("agenda")
     private AgendaEntity agenda;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "id_tarea")
+    @JoinColumn(name = "tarea_id")
     @JsonBackReference("tarea")
     private TaskEntity tarea;
 

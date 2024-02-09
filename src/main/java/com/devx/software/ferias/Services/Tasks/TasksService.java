@@ -154,4 +154,8 @@ public class TasksService {
         throw new Exception("Esta tarea no existe");
     }    
     
+    public List<TaskEntity> findallTaskbyMinuta (long idminuta) {
+        return tasksRepository.findAllTaksByMinuta(idminuta);
+    }
+    
 }
