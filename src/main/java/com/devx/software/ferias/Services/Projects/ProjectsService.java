@@ -81,8 +81,8 @@ public class ProjectsService {
         if(projectRequest.getEnterpriseResponsible() != null){
             project.agregarColaborador(this.projectColaboratorMapper.dtoToEntity(projectRequest.getEnterpriseResponsible()));
 
-            Mailgun mailgun = new Mailgun();
-            mailgun.sendBasicEmail("SEDECOP - Se ha creado un proyecto de seguimiento", projectRequest.getEnterpriseResponsible().getUsuarioId().getEmail() , "Se le informa que se ha creado un proyecto de seguimiento del cual es parte su empresa, le invitamos a ingresar al portal Veracruz tu Estado Industrial!");
+            //Mailgun mailgun = new Mailgun();
+            //mailgun.sendBasicEmail("SEDECOP - Se ha creado un proyecto de seguimiento", projectRequest.getEnterpriseResponsible().getUsuarioId().getEmail() , "Se le informa que se ha creado un proyecto de seguimiento del cual es parte su empresa, le invitamos a ingresar al portal Veracruz tu Estado Industrial!");
 
         }
         project = this.projectsRepository.save(project);

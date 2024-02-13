@@ -31,6 +31,9 @@ public class ProjectHistoryEntity {
     @Column(nullable = true)
     private Date updatedAt;
 
+    @Column(name = "is_file", nullable = false)
+    private boolean isFile;
+
     @ManyToMany
     @JoinTable(
             name = "a_proyecto_historico__a_meeting",
@@ -98,4 +101,13 @@ public class ProjectHistoryEntity {
     public void setMeetings(List<MeetingEntity> meeting) {
         this.meetings = meeting;
     }
+
+    public boolean isFile() {
+        return isFile;
+    }
+
+    public void setFile(boolean isFile) {
+        this.isFile = isFile;
+    }
+    
 }
