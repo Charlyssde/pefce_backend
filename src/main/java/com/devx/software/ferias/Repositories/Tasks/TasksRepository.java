@@ -74,5 +74,16 @@ public interface TasksRepository extends JpaRepository<TaskEntity, Long> {
             String fechaTermino,
             String estatus*/
     );
+    
+    
+    @Query(
+            value = "select * from a_tareas at2 \n"
+            + "join a_minuta__a_tarea amat on at2.id = amat.tarea_id \n"
+            + "join a_minutas am on amat.minuta_id = am.id \n"
+            + "where am.id  =  ?1",
+            nativeQuery = true
+    )
+    List<TaskEntity> findAllTaksByMinuta(long idminuta);
+
 
 }

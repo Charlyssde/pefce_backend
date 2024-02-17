@@ -42,6 +42,10 @@ public class MinutasService {
     }
 
     public Long findLastIdInserted() {
-        return minutasRepository.findMinutaLastIdInserted();
+        return minutasRepository.findAllByOrderByIdDesc().get(0).getId();
+    }
+    
+    public List<MinutasEntity> findAllMinutasWhereIn (List<Long> ids){
+    return minutasRepository.findAllMinutasWhereIn(ids);
     }
 }

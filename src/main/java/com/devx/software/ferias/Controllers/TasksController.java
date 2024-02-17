@@ -134,4 +134,15 @@ public class TasksController {
             return new ResponseEntity(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
+     @GetMapping("/minuta/{idminuta}")
+    public ResponseEntity<List<TaskEntity>> findAltaskbyminuta(@PathVariable long idminuta) { 
+         try{
+            this.headers.set("200"," exitosa");
+            return new ResponseEntity(this.tasksService.findallTaskbyMinuta(idminuta),this.headers,HttpStatus.OK);
+        }
+        catch(Exception e){
+            return new ResponseEntity(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

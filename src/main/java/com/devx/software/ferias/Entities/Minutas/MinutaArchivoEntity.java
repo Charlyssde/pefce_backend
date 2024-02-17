@@ -18,7 +18,7 @@ public class MinutaArchivoEntity {
     @JoinColumn(name = "id_minuta")
     @JsonBackReference
     private MinutasEntity minuta;
-
+    
     @ManyToOne(optional = false)
     @JoinColumn(name = "responsable")
     private UserEntity responsable;
@@ -34,6 +34,58 @@ public class MinutaArchivoEntity {
 
     @Column
     private Date updatedAt;
+    
+    @Column
+    private String url;
+    
+     @Column
+    private String tipo;
+     
+     @Column
+    private long tamaño;
+
+    public MinutaArchivoEntity() {
+    }
+     
+     
+    public MinutaArchivoEntity(Long id, MinutasEntity minuta, UserEntity responsable, String archivo, String nombre, Date createdAt, Date updatedAt, String url, String tipo, long tamaño) {
+        this.id = id;
+        this.minuta = minuta;
+        this.responsable = responsable;
+        this.archivo = archivo;
+        this.nombre = nombre;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.url = url;
+        this.tipo = tipo;
+        this.tamaño = tamaño;
+    }
+     
+     
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public long getTamaño() {
+        return tamaño;
+    }
+
+    public void setTamaño(long tamaño) {
+        this.tamaño = tamaño;
+    }
 
     public Long getId() {
         return id;

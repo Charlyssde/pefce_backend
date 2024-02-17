@@ -5,8 +5,10 @@ import com.devx.software.ferias.Repositories.Agenda.AgendaRepository;
 import com.devx.software.ferias.Repositories.Tasks.TasksRepository;
 import com.devx.software.ferias.Entities.Agenda.AgendaEntity;
 import com.devx.software.ferias.Entities.Agenda.AgendaTareaEntity;
+import com.devx.software.ferias.Entities.Minutas.MinutaTareaEntity;
 import com.devx.software.ferias.Entities.Minutas.MinutasEntity;
 import com.devx.software.ferias.Repositories.Agenda.AgendaTareaRepository;
+import com.devx.software.ferias.Repositories.Minutas.MinutaTareaRepository;
 import com.devx.software.ferias.Repositories.Minutas.MinutasRepository;
 import com.devx.software.ferias.Services.Users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ public class MinutasTareasService {
     private final UserService usuariosService;
     private final AgendaRepository agendaRepositories;
     private final AgendaTareaRepository agendaTareaRepository;
+    private final MinutaTareaRepository minutaTareaRepository;
 
     @Autowired
     public MinutasTareasService(
@@ -29,16 +32,22 @@ public class MinutasTareasService {
             MinutasRepository minutaRepository,
             UserService usuariosService,
             AgendaRepository agendaRepositories,
-            AgendaTareaRepository agendaTareaRepository) {
+            AgendaTareaRepository agendaTareaRepository,
+            MinutaTareaRepository minutaTareaRepository
+            ) {
         this.tasksRepository = tasksRepository;
         this.minutaRepository = minutaRepository;
         this.usuariosService = usuariosService;
         this.agendaRepositories = agendaRepositories;
         this.agendaTareaRepository = agendaTareaRepository;
+        this.minutaTareaRepository = minutaTareaRepository;
     }
 
     public TaskEntity save(TaskEntity entity, Long id, Long idUsuario) throws Exception {
         try {
+            
+          TaskEntity nuevo = tasksRepository.save(entity);
+            
             MinutasEntity minuta = minutaRepository.findMinutaById(id);
             //minuta.agregarTarea(entity);
             minutaRepository.save(minuta);
@@ -49,14 +58,23 @@ public class MinutasTareasService {
             ae.setInicio(entity.getFechaInicio());
             ae.setFin(entity.getFechaTermino());
             ae.setDiaCompleto(true);
+            ae.setEstatus(entity.getEstatus());
+            ae.setCreatedAt(entity.getCreatedAt());
+            ae.setUpdatedAt(entity.getUpdatedAt());
+            
             this.agendaRepositories.save(ae);
 
-            entity = tasksRepository.findLastInsertedTareaOnMinutas(id);
+         //   entity = tasksRepository.findLastInsertedTareaOnMinutas(id);
 
             AgendaTareaEntity ate = new AgendaTareaEntity();
             ate.setAgenda(ae);
-            ate.setTarea(entity);
+            ate.setTarea(nuevo);
             this.agendaTareaRepository.save(ate);
+            
+            MinutaTareaEntity mint = new MinutaTareaEntity ();
+            mint.setMinuta(minuta);
+          mint.setTarea(nuevo);
+           this.minutaTareaRepository.save(mint);
 
             return entity;
         } catch (Exception e) {
