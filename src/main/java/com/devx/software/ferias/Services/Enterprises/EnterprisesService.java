@@ -14,6 +14,7 @@ import com.devx.software.ferias.Entities.Shared.DomicilioEntity;
 import com.devx.software.ferias.Entities.Sistema.SistemaEntity;
 import com.devx.software.ferias.Entities.Users.UserEntity;
 import com.devx.software.ferias.Enums.TipoPerfilEnum;
+import com.devx.software.ferias.Mail.EmailService;
 import com.devx.software.ferias.Mappers.Enterprises.EnterpriseListUserFilterMapper;
 import com.devx.software.ferias.Mappers.Enterprises.FormResourceEnterpriseMapper;
 import com.devx.software.ferias.Mappers.Enterprises.ProductMapper;
@@ -70,6 +71,8 @@ public class EnterprisesService {
     private final UserService userService;
     private final SistemaRepository sistemaRepository;
 
+    private final EmailService emailService;
+
     @Autowired
     public EnterprisesService(
             PasswordEncoder passwordEncoder,
@@ -87,7 +90,8 @@ public class EnterprisesService {
             FormResourcesUserMapper formResourcesUserMapper,
             ProductMapper productMapper,
             UserService userService,
-            SistemaRepository sistemaRepository) {
+            SistemaRepository sistemaRepository,
+            EmailService emailService) {
         this.passwordEncoder = passwordEncoder;
         this.domiciliosRepository = domiciliosRepository;
         this.enterpriseTradeImageRepository = enterpriseTradeImageRepository;
@@ -106,6 +110,7 @@ public class EnterprisesService {
         this.productMapper = productMapper;
         this.userService = userService;
         this.sistemaRepository = sistemaRepository;
+        this.emailService = emailService;
     }
 
     public static int getRandomIndex(int max) {
@@ -121,8 +126,8 @@ public class EnterprisesService {
         return randomPassword;
     }
 
-    public List<EnterpriseListUserFilterDTO> getAllByTopic(String topic) throws Exception{
-        if(!topic.equals(null)){
+    public List<EnterpriseListUserFilterDTO> getAllByTopic(String topic) throws Exception {
+        if (!topic.equals(null)) {
             List<EnterpriseEntity> enterpriseEntityList = new ArrayList<>();
             if ("active".equals(topic)) {
                 enterpriseEntityList = this.getAllActiveEnterprises();
@@ -134,8 +139,7 @@ public class EnterprisesService {
     }
 
 
-
-    public List<EnterpriseEntity> getAll(){
+    public List<EnterpriseEntity> getAll() {
         return this.enterprisesRepository.findAll();
     }
 
@@ -170,11 +174,11 @@ public class EnterprisesService {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         UserEntity usuario = this.userService.findByEmail(email);
 
-        if (usuario.getPerfiles().get(0).getNombre().equals("Empresa") ) {
+        if (usuario.getPerfiles().get(0).getNombre().equals("Empresa")) {
 
-            EnterpriseListUserFilterDTO enterprise = this.findByUserId( usuario.getId() );
-            return this.enterprisesRepository.findAllByEnterpriseId(pageable, enterprise.getId() );
-        } else{
+            EnterpriseListUserFilterDTO enterprise = this.findByUserId(usuario.getId());
+            return this.enterprisesRepository.findAllByEnterpriseId(pageable, enterprise.getId());
+        } else {
 
             ProfileEntity activeProfileEntity = this.profileRepository.findByUserActiveSessionEmail(email);
 
@@ -223,11 +227,11 @@ public class EnterprisesService {
             UserEntity responsable = sistemaEntity.get(0).getResponableSubin();
 
             Mailgun mailgun = new Mailgun();
-            mailgun.sendBasicEmail("Se ha creado o actualizado un registro de una empresa", responsable.getEmail() , "Se le informa que se ha llenado el formulario de registro de la empresa: " + enterprise.getEmpresa() + "<br><br>Acceda al panel de empresas para poder acceder a esta información");
+            mailgun.sendBasicEmail("Se ha creado o actualizado un registro de una empresa", responsable.getEmail(), "Se le informa que se ha llenado el formulario de registro de la empresa: " + enterprise.getEmpresa() + "<br><br>Acceda al panel de empresas para poder acceder a esta información");
 
             try {
                 NotificationsEntity ne = new NotificationsEntity();
-                ne.setTexto( "Se le informa que se ha creado un registro nuevo de la empresa: " + enterprise.getEmpresa() );
+                ne.setTexto("Se le informa que se ha creado un registro nuevo de la empresa: " + enterprise.getEmpresa());
                 ne.setVista(Boolean.FALSE);
                 ne.setCreatedAt(new Date());
                 ne.setTipo(Long.valueOf(1));
@@ -247,14 +251,14 @@ public class EnterprisesService {
         if (this.enterprisesRepository.findByRfc(enterpriseEntity.getRfc()) == null) {
             ProfileEntity perfil = this.profileRepository.findProfileEntityByTipo(TipoPerfilEnum.EMPRESA.getTipo());
             List<UserEntity> contactos = enterpriseEntity.getContactos();
-            Mailgun mailgun = new Mailgun();
+//            Mailgun mailgun = new Mailgun();
             enterpriseEntity.addImagenEmpresarial(this.createEmptyEnterpriseTradeImage());
             for (UserEntity contacto : contactos) {
                 contacto.setEstatus(false);
                 contacto.addPerfil(perfil);
-                mailgun.sendBasicEmail("SEDECOP Solicitud de registro recibida", contacto.getEmail() , "El registro de su empresa se ha recibido, en cuanto sus datos sean validados recibirá una notificación junto con sus datos de acceso.");
+//                mailgun.sendBasicEmail("SEDECOP Solicitud de registro recibida", contacto.getEmail() , "El registro de su empresa se ha recibido, en cuanto sus datos sean validados recibirá una notificación junto con sus datos de acceso.");
             }
-            enterpriseEntity.setDomicilios( null );
+            enterpriseEntity.setDomicilios(null);
             return this.enterprisesRepository.save(enterpriseEntity);
         }
         throw new Exception("Esta empresa ya se encuentra registrada");
@@ -304,7 +308,7 @@ public class EnterprisesService {
 
             try {
                 NotificationsEntity ne = new NotificationsEntity();
-                ne.setTexto( "Se le informa que se ha actualizado el estatus de la empresa: " + enterprise.getEmpresa() + "a " + ( !status ? "Inactiva" : "Activa" ) );
+                ne.setTexto("Se le informa que se ha actualizado el estatus de la empresa: " + enterprise.getEmpresa() + "a " + (!status ? "Inactiva" : "Activa"));
                 ne.setVista(Boolean.FALSE);
                 ne.setCreatedAt(new Date());
                 ne.setTipo(Long.valueOf(1));
@@ -350,8 +354,11 @@ public class EnterprisesService {
                 enterpriseAccessRequestEntity = this.enterpriseAccessRequestRepository.save(enterpriseAccessRequestEntity);
                 enterpriseEntity.addAccessRequest(enterpriseAccessRequestEntity);
 
-                Mailgun mailgun = new Mailgun();
-                mailgun.sendBasicEmail("Respuesta a solicitud de acceso - Tu estado industrial", mainContact.getEmail(), this.accessRequestEmailMessage(message));
+
+                //Mailgun mailgun = new Mailgun();
+                //mailgun.sendBasicEmail("Respuesta a solicitud de acceso - Tu estado industrial", mainContact.getEmail(), this.accessRequestEmailMessage(message));
+                this.emailService.sendEmail(mainContact.getEmail(), "Respuesta a solicitud de acceso - Tu estado industrial", this.accessRequestEmailMessage(message));
+
             }
 
             return this.enterprisesRepository.save(enterpriseEntity);
@@ -840,7 +847,7 @@ public class EnterprisesService {
 
 
     // SCOPES
-    private List<EnterpriseEntity> getAllActiveEnterprises(){
+    private List<EnterpriseEntity> getAllActiveEnterprises() {
         return this.enterprisesRepository.findAllByEstatusTrue();
     }
 
@@ -876,17 +883,18 @@ public class EnterprisesService {
     }
 
     // SCOPES
-    public List<EnterpriseListUserFilterDTO> findAllByStatusTrueWithContacts(){
+    public List<EnterpriseListUserFilterDTO> findAllByStatusTrueWithContacts() {
         return this.enterpriseListUserFilterMapper.listEntityToDTO(this.enterprisesRepository.findAllByEstatusTrue());
     }
 
-    public EnterpriseListUserFilterDTO findByUserId(Long userId) throws  Exception{
+    public EnterpriseListUserFilterDTO findByUserId(Long userId) throws Exception {
         EnterpriseEntity entity = this.enterprisesRepository.findByUserId(userId);
-        if(entity != null){
+        if (entity != null) {
             return this.enterpriseListUserFilterMapper.entityToDTO(entity);
         }
-        throw  new Exception("Este empresario no pertenece a ninguna empresa");
+        throw new Exception("Este empresario no pertenece a ninguna empresa");
     }
+
     public List<EnterpriseEntity> findByCorreo(String correo) {
         return this.enterprisesRepository.findEmpresaPorCorreo(correo);
     }
@@ -896,15 +904,15 @@ public class EnterprisesService {
     }
 
 
-    public List<Object[]> obtenerTotalPorSexo() throws Exception{
+    public List<Object[]> obtenerTotalPorSexo() throws Exception {
         return this.enterprisesRepository.obtenerTotalPorSexo();
     }
 
-    public List<Object[]> obtenerTotalPorMunicipio() throws Exception{
+    public List<Object[]> obtenerTotalPorMunicipio() throws Exception {
         return this.enterprisesRepository.obtenerTotalPorMunicipio();
     }
 
-    public List<Object[]> obtenerTotalPorsector() throws Exception{
+    public List<Object[]> obtenerTotalPorsector() throws Exception {
         return this.enterprisesRepository.obtenerTotalPorSector();
     }
 
