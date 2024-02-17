@@ -149,4 +149,11 @@ public class UserEntity {
     public void setDomicilios(List<DomicilioEntity> domicilios) {
         this.domicilios = domicilios;
     }
+
+    @Override
+    public String toString() {
+        return "UserEntity{" + "id=" + id + ", nombre=" + nombre + ", email=" + email + ", password=" + password + ", telefono=" + telefono + ", sexo=" + sexo + ", recibirPublicidad=" + recibirPublicidad + ", estatus=" + estatus + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + '}';
+    }
+    
+    
 }

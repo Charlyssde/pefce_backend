@@ -1,5 +1,6 @@
 package com.devx.software.ferias.Entities.Minutas;
 
+import com.devx.software.ferias.Entities.Tasks.TaskEntity;
 import com.devx.software.ferias.Entities.Users.UserEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -15,30 +16,20 @@ public class MinutaTareaEntity {
     private Long id;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "id_minuta")
+    @JoinColumn(name = "minuta_id")
     @JsonBackReference
     private MinutasEntity minuta;
 
+      @ManyToOne(optional = false)
+    @JoinColumn(name = "tarea_id")
+    @JsonBackReference("tarea")
+    private TaskEntity tarea;
     /*
     @ManyToOne(optional = false)
     @JoinColumn(name = "id_usuario")
     private UserEntity usuario;
     */
 
-    @Column
-    private String nombreTarea;
-
-    @Column
-    private String entregable;
-
-    @Column
-    private Date fechaTermino;
-
-    @Column
-    private Date createdAt;
-
-    @Column
-    private Date updatedAt;
 
     public Long getId() {
         return id;
@@ -56,30 +47,7 @@ public class MinutaTareaEntity {
         this.minuta = minuta;
     }
 
-    public String getNombreTarea() {
-        return nombreTarea;
-    }
-
-    public void setNombreTarea(String nombreTarea) {
-        this.nombreTarea = nombreTarea;
-    }
-
-    public String getEntregable() {
-        return entregable;
-    }
-
-    public void setEntregable(String entregable) {
-        this.entregable = entregable;
-    }
-
-    public Date getFechaTermino() {
-        return fechaTermino;
-    }
-
-    public void setFechaTermino(Date fechaTermino) {
-        this.fechaTermino = fechaTermino;
-    }
-
+  
     /*
     public UserEntity getUsuario() {
         return usuario;
@@ -91,21 +59,14 @@ public class MinutaTareaEntity {
 
      */
 
-    public Date getCreatedAt() {
-        return createdAt;
+   
+    public TaskEntity getTarea() {
+        return tarea;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setTarea(TaskEntity tarea) {
+        this.tarea = tarea;
     }
 
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-
+ 
 }
