@@ -152,5 +152,6 @@ public interface UsersRepository extends JpaRepository<UserEntity, Long> {
             + "JOIN a_minutas am ON amau.minuta_id = am.id\n"
             + "WHERE am.id = ?1 ", nativeQuery = true)
     List<UserEntity> findUsuariosByMinutaId(Long minutaId);
-
+    
+   UserEntity findUserEntityBynombre(String nombre);
 }
