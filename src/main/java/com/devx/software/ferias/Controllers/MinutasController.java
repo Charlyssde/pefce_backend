@@ -4,6 +4,7 @@ import com.devx.software.ferias.Entities.Tasks.TaskEntity;
 import com.devx.software.ferias.Entities.Minutas.MinutasEntity;
 
 import com.devx.software.ferias.Services.Minutas.*;
+import com.devx.software.ferias.Services.Tasks.TasksService;
 import com.devx.software.ferias.Services.Users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -34,7 +35,8 @@ public class MinutasController {
     private final UsuarioMinutaService usuarioMinutaService;
 
     private final MinutasTareasService mTareasService;
-
+   
+    private  final TasksService tasksService;
     @Autowired
     public MinutasController(
             MinutasService minutasService,
@@ -44,7 +46,9 @@ public class MinutasController {
             MinutaTemaService minutaTemaService,
             MinutaArchivoService minutaArchivoService,
             UsuarioMinutaService usuarioMinutaService,
-            MinutasTareasService mTareaService) {
+            MinutasTareasService mTareaService,
+            TasksService tasksService
+            ) {
         this.minutasService = minutasService;
         this.contactoMinutaService = contactoMinutaService;
         this.minutaTareaService = minutaTareaService;
@@ -53,6 +57,7 @@ public class MinutasController {
         this.minutaArchivoService = minutaArchivoService;
         this.usuarioMinutaService = usuarioMinutaService;
         this.mTareasService = mTareaService;
+        this.tasksService = tasksService;
     }
 
     @PostMapping("/create")
@@ -81,9 +86,33 @@ public class MinutasController {
 
     @PutMapping("/update")
     public ResponseEntity<MinutasEntity> update(@RequestBody MinutasEntity entity) {
+        
+        List<TaskEntity> listtareas = tasksService.findallTaskbyMinuta(entity.getId());
+        
         HttpHeaders headers = new HttpHeaders();
+        MinutasEntity toUpdate = new MinutasEntity ();
+            toUpdate.setId(entity.getId());
+            toUpdate.setAsunto(entity.getAsunto());
+            toUpdate.setCiudad(entity.getCiudad());
+            toUpdate.setCodigoPostal(entity.getCodigoPostal());
+            toUpdate.setCreatedAt(entity.getCreatedAt());
+            toUpdate.setEstado(entity.getEstado());
+            toUpdate.setFecha(entity.getFecha());
+            toUpdate.setFolio(entity.getFolio());
+           toUpdate.setMunicipio(entity.getMunicipio());
+           toUpdate.setMinutaUsuarios(entity.getMinutaUsuarios());
+           toUpdate.setMinutaTemas(entity.getMinutaTemas());
+           toUpdate.setPuntosTratados(entity.getPuntosTratados());
+           toUpdate.setProyecto(entity.getProyecto());
+           toUpdate.setSede(entity.getSede());
+           toUpdate.setTipoMinuta(entity.getTipoMinuta());
+           toUpdate.setCreatedAt(entity.getCreatedAt());
+           toUpdate.setMinutaTareas(listtareas);
+           toUpdate.setObjetivo(entity.getObjetivo());
+           toUpdate.setMinutaArchivos(entity.getMinutaArchivos());//vacio
+           
         try {
-            MinutasEntity responseData = minutasService.update(entity);
+            MinutasEntity responseData = minutasService.update(toUpdate);
             headers.set("200", "Actualización exitosa");
             return new ResponseEntity<>(responseData, headers, HttpStatus.OK);
         } catch (Exception e) {

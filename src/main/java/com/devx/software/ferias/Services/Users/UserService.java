@@ -336,4 +336,8 @@ public class UserService {
     public UserDTO findUserDTOById(Long id){
         return this.userMapper.entityToDTO(this.usersRepository.findUserById(id));
     }
+    
+   public List<UserEntity> findbyuserbyminuta (Long id){
+        return this.usersRepository.findUsuariosByMinutaId(id);
+    }
 }
