@@ -14,7 +14,7 @@ public class SendgridAdapter implements MailGateway {
 
     private final String FROM = "ssedecop@gmail.com";
 
-    private final String API = "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";
+    private final String API = "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";
 
     @Override
     public void sendEmail(String to, String subject, String body) {
@@ -42,7 +42,7 @@ public class SendgridAdapter implements MailGateway {
 
 
         } catch (Exception e) {
-
+            logger.error(e.getMessage());
             throw new RuntimeException("error al enviar email");
 
         }
