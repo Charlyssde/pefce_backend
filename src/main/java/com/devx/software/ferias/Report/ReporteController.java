@@ -78,6 +78,8 @@ public class ReporteController {
             List<TaskEntity> listTreas = tasksService.findallTaskbyMinuta(id);
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat sdfHora = new SimpleDateFormat("HH:mm:ss");
+
 
             Map<String, Object> params = new HashMap<>();
 
@@ -88,9 +90,15 @@ public class ReporteController {
             params.put("objetivo", object.getObjetivo());
             params.put("sede", object.getSede());
             params.put("puntos", object.getPuntosTratados());
-
-            params.put("fecha", sdf.format(object.getFecha().getTime()));
-            params.put("hora", "------");
+            
+            if (object.getProyecto() != null) {
+                  params.put("solicitante", object.getProyecto().getEmpresaId().getEmpresa());
+            }else{
+                  params.put("solicitante", "Sin Solicitante/Proyecto");
+            }
+          
+            params.put("fecha", sdf.format(object.getCreatedAt().getTime()));
+            params.put("hora",  sdfHora.format(object.getCreatedAt().getTime()));
             params.put("consecutivo", object.getFolio());
 
             // DATOS QUE MANDO EN LA TABLA RESPONSALE
@@ -149,6 +157,7 @@ public class ReporteController {
                 List<UserEntity> listparticipantes = usuarioService.findbyuserbyminuta(minuta.getId());
                 List<TaskEntity> listTreas = tasksService.findallTaskbyMinuta(minuta.getId());
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat sdfHora = new SimpleDateFormat("HH:mm:ss");
 
                 // LOS DATOS QUE VAN EN EL FIEL DE JASPERT
                 params.put("logo", "report/logo.png");
@@ -157,8 +166,15 @@ public class ReporteController {
                 params.put("objetivo", minuta.getObjetivo());
                 params.put("sede", minuta.getSede());
                 params.put("puntos", minuta.getPuntosTratados());
-                params.put("fecha", sdf.format(minuta.getFecha().getTime()));
-                params.put("hora", "------");
+                
+                if (minuta.getProyecto() != null) {
+                    params.put("solicitante", minuta.getProyecto().getEmpresaId().getEmpresa());
+                } else {
+                    params.put("solicitante", "Sin Solicitante/Proyecto");
+                }
+
+                params.put("fecha", sdf.format(minuta.getCreatedAt().getTime()));
+                params.put("hora", sdfHora.format(minuta.getCreatedAt().getTime()));
                 params.put("consecutivo", minuta.getFolio());
 
                 // DATOS QUE MANDO EN LA TABLA RESPONSALE DEL JASPERT
@@ -223,6 +239,7 @@ public class ReporteController {
                 List<UserEntity> listparticipantes = usuarioService.findbyuserbyminuta(minuta.getId());
                 List<TaskEntity> listTreas = tasksService.findallTaskbyMinuta(minuta.getId());
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat sdfHora = new SimpleDateFormat("HH:mm:ss");
 
                 // LOS DATOS QUE VAN EN EL FIEL DE JASPERT
                 params.put("logo", "report/logo.png");
@@ -231,8 +248,15 @@ public class ReporteController {
                 params.put("objetivo", minuta.getObjetivo());
                 params.put("sede", minuta.getSede());
                 params.put("puntos", minuta.getPuntosTratados());
-                params.put("fecha", sdf.format(minuta.getFecha().getTime()));
-                params.put("hora", "------");
+                
+                if (minuta.getProyecto() != null) {
+                    params.put("solicitante", minuta.getProyecto().getEmpresaId().getEmpresa());
+                } else {
+                    params.put("solicitante", "Sin Solicitante/Proyecto");
+                }
+
+                params.put("fecha", sdf.format(minuta.getCreatedAt().getTime()));
+                params.put("hora", sdfHora.format(minuta.getCreatedAt().getTime()));
                 params.put("consecutivo", minuta.getFolio());
 
                 // DATOS QUE MANDO EN LA TABLA RESPONSALE DEL JASPERT
