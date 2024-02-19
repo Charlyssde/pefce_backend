@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.apache.commons.io.IOUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.RequestPart;
 
 
 /**
@@ -40,12 +41,18 @@ private final   MinutaArchivoService2 minutaArchivoService2;
     ) {
         this.minutaArchivoService2 = minutaArchivoService2;
     }
-    
-    @CrossOrigin(origins = "*")
-    @RequestMapping(value = "", method = RequestMethod.POST)
-    public ResponseEntity<?> createMinutaArchivo(@Valid @RequestParam("file") MultipartFile file , @RequestParam("idminuta") long idminuta, long idusuario) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(this.minutaArchivoService2.save(file, idminuta, idusuario));
-    }
+        
+ @CrossOrigin(origins = "*")
+@RequestMapping(value = "", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+public ResponseEntity<?> createMinutaArchivo(
+        @RequestParam("file") MultipartFile file,
+        @RequestParam("idminuta") long idminuta,
+        @RequestParam("idusuario") long idusuario
+) {
+    return ResponseEntity.status(HttpStatus.CREATED).body(this.minutaArchivoService2.save(file, idminuta, idusuario));
+}
+
+
     
     
 @CrossOrigin(origins = "*")

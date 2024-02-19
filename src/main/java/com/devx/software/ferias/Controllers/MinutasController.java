@@ -2,8 +2,11 @@ package com.devx.software.ferias.Controllers;
 
 import com.devx.software.ferias.Entities.Tasks.TaskEntity;
 import com.devx.software.ferias.Entities.Minutas.MinutasEntity;
+import com.devx.software.ferias.Entities.Projects.ProjectEntity;
+import com.devx.software.ferias.Entities.Proyectos.ProyectosEntity;
 
 import com.devx.software.ferias.Services.Minutas.*;
+import com.devx.software.ferias.Services.Projects.ProjectsService;
 import com.devx.software.ferias.Services.Tasks.TasksService;
 import com.devx.software.ferias.Services.Users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +38,8 @@ public class MinutasController {
     private final UsuarioMinutaService usuarioMinutaService;
 
     private final MinutasTareasService mTareasService;
+    
+    private final ProjectsService projectsService;
    
     private  final TasksService tasksService;
     @Autowired
@@ -47,7 +52,8 @@ public class MinutasController {
             MinutaArchivoService minutaArchivoService,
             UsuarioMinutaService usuarioMinutaService,
             MinutasTareasService mTareaService,
-            TasksService tasksService
+            TasksService tasksService,
+            ProjectsService projectsService
             ) {
         this.minutasService = minutasService;
         this.contactoMinutaService = contactoMinutaService;
@@ -58,6 +64,7 @@ public class MinutasController {
         this.usuarioMinutaService = usuarioMinutaService;
         this.mTareasService = mTareaService;
         this.tasksService = tasksService;
+        this.projectsService = projectsService;
     }
 
     @PostMapping("/create")
@@ -88,7 +95,7 @@ public class MinutasController {
     public ResponseEntity<MinutasEntity> update(@RequestBody MinutasEntity entity) {
         
         List<TaskEntity> listtareas = tasksService.findallTaskbyMinuta(entity.getId());
-        
+       
         HttpHeaders headers = new HttpHeaders();
         MinutasEntity toUpdate = new MinutasEntity ();
             toUpdate.setId(entity.getId());
@@ -107,6 +114,7 @@ public class MinutasController {
            toUpdate.setSede(entity.getSede());
            toUpdate.setTipoMinuta(entity.getTipoMinuta());
            toUpdate.setCreatedAt(entity.getCreatedAt());
+           toUpdate.setUpdatedAt(new Date());
            toUpdate.setMinutaTareas(listtareas);
            toUpdate.setObjetivo(entity.getObjetivo());
            toUpdate.setMinutaArchivos(entity.getMinutaArchivos());//vacio
