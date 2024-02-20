@@ -266,6 +266,7 @@ public class EnterprisesService {
 
     public EnterpriseEntity update(Long enterpriseId, FormResourceEnterpriseDTO formResourceEnterpriseDTO) throws Exception {
         EnterpriseEntity enterprise = this.enterprisesRepository.findById(enterpriseId).get();
+        EnterpriseEntity tosave = new EnterpriseEntity();
         if (enterprise != null) {
             List<Long> contactsIds = enterprise.getContactos().stream().map(UserEntity::getId).collect(Collectors.toList());
             this.usersRepository.deleteAllByIdIn(contactsIds);
@@ -273,12 +274,72 @@ public class EnterprisesService {
             ProfileEntity perfil = this.profileRepository.findProfileEntityByTipo(TipoPerfilEnum.EMPRESA.getTipo());
             List<UserEntity> contactos = enterprise.getContactos();
             for (UserEntity contacto : contactos) {
+                UserEntity userfind = this.usersRepository.findUserById(contacto.getId());
                 contacto.setEstatus(true);
                 contacto.addPerfil(perfil);
+                contacto.setPassword(userfind.getPassword());
                 this.usersRepository.save(contacto);
             }
+             EnterpriseEntity findauto = this.enterprisesRepository.findById(enterpriseId).get();
+             System.out.println("AUTORIZADO " + findauto.getAutorizado() );
+            enterprise.setAutorizado(findauto.getAutorizado());
+            
             return this.enterprisesRepository.save(enterprise);
 
+        }
+        throw new Exception("Esta empresa no existe");
+    }
+    
+    public EnterpriseEntity updateautorizado(Long enterpriseId, FormResourceEnterpriseDTO formResourceEnterpriseDTO) throws Exception {
+        EnterpriseEntity enterprise = this.enterprisesRepository.findById(enterpriseId).get();
+        if (enterprise != null) {
+            List<Long> contactsIds = enterprise.getContactos().stream().map(UserEntity::getId).collect(Collectors.toList());
+            this.usersRepository.deleteAllByIdIn(contactsIds);
+            enterprise = this.formResourceEnterpriseMapper.dtoToEntity(formResourceEnterpriseDTO);
+            ProfileEntity perfil = this.profileRepository.findProfileEntityByTipo(TipoPerfilEnum.EMPRESA.getTipo());
+            List<UserEntity> contactos = enterprise.getContactos();
+            for (UserEntity contacto : contactos) {
+                UserEntity userfind = this.usersRepository.findUserById(contacto.getId());
+                contacto.setEstatus(true);
+                contacto.addPerfil(perfil);
+                contacto.setPassword(userfind.getPassword());
+                this.usersRepository.save(contacto);
+            }
+      
+           enterprise.setAutorizado(true);
+            try {
+                   return this.enterprisesRepository.save(enterprise);
+            } catch (Exception e) {
+                e.getMessage();
+            }
+        
+        }
+        throw new Exception("Esta empresa no existe");
+    }
+    
+       public EnterpriseEntity updateDesautorizado(Long enterpriseId, FormResourceEnterpriseDTO formResourceEnterpriseDTO) throws Exception {
+        EnterpriseEntity enterprise = this.enterprisesRepository.findById(enterpriseId).get();
+        if (enterprise != null) {
+            List<Long> contactsIds = enterprise.getContactos().stream().map(UserEntity::getId).collect(Collectors.toList());
+            this.usersRepository.deleteAllByIdIn(contactsIds);
+            enterprise = this.formResourceEnterpriseMapper.dtoToEntity(formResourceEnterpriseDTO);
+            ProfileEntity perfil = this.profileRepository.findProfileEntityByTipo(TipoPerfilEnum.EMPRESA.getTipo());
+            List<UserEntity> contactos = enterprise.getContactos();
+            for (UserEntity contacto : contactos) {
+                UserEntity userfind = this.usersRepository.findUserById(contacto.getId());
+                contacto.setEstatus(true);
+                contacto.addPerfil(perfil);
+                contacto.setPassword(userfind.getPassword());
+                this.usersRepository.save(contacto);
+            }
+      
+           enterprise.setAutorizado(false);
+            try {
+                   return this.enterprisesRepository.save(enterprise);
+            } catch (Exception e) {
+                e.getMessage();
+            }
+        
         }
         throw new Exception("Esta empresa no existe");
     }
@@ -915,5 +976,5 @@ public class EnterprisesService {
     public List<Object[]> obtenerTotalPorsector() throws Exception {
         return this.enterprisesRepository.obtenerTotalPorSector();
     }
-
+    
 }
