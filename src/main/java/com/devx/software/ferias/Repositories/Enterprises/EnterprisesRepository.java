@@ -84,7 +84,7 @@ public interface EnterprisesRepository extends JpaRepository<EnterpriseEntity, L
             String estatus
     );
 
-    Page<EnterpriseEntity> findAllByPabellonAprobadoIsTrueOrderByEmpresaDesc(Pageable pageable);
+    Page<EnterpriseEntity> findAllByAutorizadoIsTrueAndPabellonAprobadoIsTrueOrderByEmpresaDesc(Pageable pageable);
 
     @Query(
             value = "SELECT a_empresas.* FROM a_empresas " +
@@ -94,7 +94,7 @@ public interface EnterprisesRepository extends JpaRepository<EnterpriseEntity, L
                     "AND (CAST(:categoria as text) is null OR CAST(a_empresas.categoria_id as TEXT) = CAST(:categoria AS TEXT)) " +
                     "AND (CAST(:sector as text) is null OR CAST(a_empresas.sector_id as TEXT) = CAST(:sector AS TEXT)) " +
                     "AND (CAST(:subsector as text) is null OR CAST(a_empresas.subsector_id as TEXT) = CAST(:subsector AS TEXT)) " +
-                    "AND a_empresas.pabellon_aprobado = true " +
+                    "AND a_empresas.autorizado = true and  a_empresas.pabellon_aprobado = true " +
                     "ORDER BY a_empresas.id DESC",
             nativeQuery = true
     )

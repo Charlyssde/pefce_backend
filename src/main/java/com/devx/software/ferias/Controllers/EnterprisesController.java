@@ -200,6 +200,34 @@ public class EnterprisesController {
             return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
+     @PutMapping("/autorizado/{enterpriseId}")
+    public ResponseEntity<EnterpriseEntity> updateEnterpriseautorizado(@PathVariable Long enterpriseId, @RequestBody FormResourceEnterpriseDTO formResourceEnterpriseDTO) {
+        try {
+            this.headers.set("200", "Actualización exitosa");
+            return new ResponseEntity(this.enterprisesService.updateautorizado(enterpriseId, formResourceEnterpriseDTO), this.headers, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+      @PutMapping("/desautorizado/{enterpriseId}")
+    public ResponseEntity<EnterpriseEntity> updateEnterprisedesautorizado(@PathVariable Long enterpriseId, @RequestBody FormResourceEnterpriseDTO formResourceEnterpriseDTO) {
+        try {
+            this.headers.set("200", "Actualización exitosa");
+            return new ResponseEntity(this.enterprisesService.updateDesautorizado(enterpriseId, formResourceEnterpriseDTO), this.headers, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+  
+   
+      @CrossOrigin(origins = "*")
+    @RequestMapping(value = "/findAll", method = RequestMethod.GET)
+    public ResponseEntity<List<EnterpriseEntity>> findAllAreas() {
+        return ResponseEntity.status(HttpStatus.OK).body(enterprisesService.getAll());
+    }
 
     @DeleteMapping("/{enterpriseId}")
     public ResponseEntity<HashMap<String, Object>> deleteEnterprise(@PathVariable Long enterpriseId) {
@@ -480,4 +508,4 @@ public class EnterprisesController {
             return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-}
+        }

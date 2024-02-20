@@ -35,6 +35,6 @@ public class ExplorersService {
                     subsector
             );
         }
-        return this.enterprisesRepository.findAllByPabellonAprobadoIsTrueOrderByEmpresaDesc(pageable);
+        return this.enterprisesRepository.findAllByAutorizadoIsTrueAndPabellonAprobadoIsTrueOrderByEmpresaDesc(pageable);
     }
 }

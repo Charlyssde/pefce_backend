@@ -121,6 +121,9 @@ public class EnterpriseEntity {
     @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "autodiagnostico", nullable = true)
     private AutodiagnosticoEntity autodiagnostico;
+    
+   @Column(name = "autorizado", nullable = true)
+    private Boolean autorizado;
 
     public AutodiagnosticoEntity getAutodiagnostico() {
         return autodiagnostico;
@@ -353,4 +356,14 @@ public class EnterpriseEntity {
     public void setProductos(List<ProductEntity> productos) {
         this.productos = productos;
     }
+
+    public Boolean getAutorizado() {
+        return autorizado;
+    }
+
+    public void setAutorizado(Boolean autorizado) {
+        this.autorizado = autorizado;
+    }
+    
+    
 }
