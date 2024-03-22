@@ -26,7 +26,7 @@ public class MinutasService {
     }
 
     public List<MinutasEntity> page() {
-        return minutasRepository.findAll();
+        return minutasRepository.findAllByOrderByIdDesc();
     }
 
     public MinutasEntity findById(Long id) {
