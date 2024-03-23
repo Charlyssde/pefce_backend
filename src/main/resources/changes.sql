@@ -1,5 +1,5 @@
 alter table public.a_proyectos_historico
-    add i_file bool default false;
+    add is_file bool default false;
 
 --MODIFICACION A TABLA a_minuta__a_tarea
 ALTER TABLE public.a_minuta__a_tarea ADD id int8 NULL;

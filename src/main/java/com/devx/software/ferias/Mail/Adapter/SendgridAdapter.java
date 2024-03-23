@@ -14,7 +14,7 @@ public class SendgridAdapter implements MailGateway {
 
     private final String FROM = "ssedecop@gmail.com";
 
-    private final String API = "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";
+    private final String API = "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";
 
     @Override
     public void sendEmail(String to, String subject, String body) {

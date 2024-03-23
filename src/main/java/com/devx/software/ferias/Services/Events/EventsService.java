@@ -4,9 +4,13 @@ import com.devx.software.ferias.Entities.Events.EventUsersEntity;
 import com.devx.software.ferias.Entities.Events.EventEntity;
 import com.devx.software.ferias.Entities.Files.FileEntity;
 import com.devx.software.ferias.Entities.Users.UserEntity;
+import com.devx.software.ferias.Mail.EmailService;
+import com.devx.software.ferias.Mail.Adapter.SendgridAdapter;
+import com.devx.software.ferias.Mail.Gateway.MailGateway;
 import com.devx.software.ferias.Misc.Mailgun;
 import com.devx.software.ferias.Misc.MinIO;
 import com.devx.software.ferias.Repositories.Events.EventsRepository;
+import com.devx.software.ferias.Repositories.Events.EventsUserRepository;
 import com.devx.software.ferias.Services.Users.UserService;
 //import com.devx.software.ferias.zx_mappers.TiposReunionMapper;
 //import com.devx.software.ferias.zx_repositories.TiposReunionRepository;
@@ -26,6 +30,7 @@ import java.util.List;
 public class EventsService {
 
     private final EventsRepository eventsRepository;
+    private final EventsUserRepository eventsUserRepository;
 //    private final VideollamadasService vService;
 //
 //    private final TiposReunionRepository trRepository;
@@ -33,19 +38,26 @@ public class EventsService {
 
     private final UserService userService;
 
+    MailGateway mailAdapter;
+
+    @Autowired 
+    EmailService emailService;
+
     @Autowired
     public EventsService(EventsRepository eventsRepository,
 //                         VideollamadasService vService,
 //                         EventosMapper eMapper,
 //                         TiposReunionRepository trRepository,
 //                         TiposReunionMapper trMapper,
-                         UserService userService) {
+                         UserService userService,
+                         EventsUserRepository eventsUserRepository) {
         this.eventsRepository = eventsRepository;
 //        this.vService = vService;
 //        this.eMapper = eMapper;
 //        this.trRepository = trRepository;
 //        this.trMapper = trMapper;
         this.userService = userService;
+        this.eventsUserRepository = eventsUserRepository;
     }
 
 
@@ -136,23 +148,35 @@ public class EventsService {
     }
 
 
+    public List<EventEntity> listByIdUsuario(long id){
+        return eventsRepository.getAllByUser(id);
+    }
+
     @Transactional
     public EventUsersEntity agregarParticipante(EventUsersEntity entity) throws Exception {
         EventEntity eventEntity = this.findById(entity.getEvento().getId());
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         UserEntity usuario = this.userService.findByEmail( email );
-        eventEntity.addUsuarios( usuario );
+        entity.setUsuario(usuario);
+        //eventEntity.addUsuarios( usuario );
         try {
-            EventEntity entitySave = eventsRepository.save(eventEntity);
-            Mailgun mailgun = new Mailgun();
+            eventsUserRepository.save(entity);
+            //eventsRepository.save(eventEntity);
+            /*Mailgun mailgun = new Mailgun();
             mailgun.sendBasicEmail(
                     "Registro de participante a evento: " + eventEntity.getNombreEvento(),
                     email,
                     "Se ha recibido, su solicitud para participar en el evento: " + eventEntity.getNombreEvento()
-            );
+            );*/
+            this.emailService.sendEmail(
+                email, 
+                "Registro de participante a evento: " + eventEntity.getNombreEvento(), 
+                "Se ha recibido, su solicitud para participar en el evento: " + eventEntity.getNombreEvento()
+                );
 
             return entity;
         } catch (Exception e) {
+            e.printStackTrace();
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             throw new Exception(e.getMessage());
         }

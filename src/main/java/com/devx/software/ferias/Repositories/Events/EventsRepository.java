@@ -15,6 +15,11 @@ public interface EventsRepository extends JpaRepository<EventEntity, Long> {
     Long countAllByActivoTrue();
 
     @Query(
+        value = "select e.* from a_eventos e where fecha_inicio > current_date", nativeQuery = true
+    )
+    List<EventEntity> findAllByStatus();
+
+    @Query(
             value = "delete FROM a_evento__a_participantes ep " +
                     "WHERE CAST(ep.evento_id as text) = CAST(:eventoId as text) " +
                     "AND CAST(ep.usuario_id as text) = CAST(:usuarioId as text) ",
@@ -67,6 +72,9 @@ public interface EventsRepository extends JpaRepository<EventEntity, Long> {
             "    join a_catalogos ac on ac.id = ae.sector_id\n" +
             "    group by ac.nombre", nativeQuery = true)
     List<Object[]> obtenerTotalPorSector();
+
+    @Query(value = "select e.* from a_eventos", nativeQuery = true)
+    List<EventEntity> getAllByUser(long id);
 
     interface EventosHoy {
         Long getId();
