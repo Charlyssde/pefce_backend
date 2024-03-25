@@ -7,6 +7,7 @@ import com.devx.software.ferias.DTOs.Users.UserRequestDTO;
 import com.devx.software.ferias.Entities.Profiles.ProfileEntity;
 import com.devx.software.ferias.Entities.Users.UserEntity;
 import com.devx.software.ferias.Entities.Users.UserProfileEntity;
+import com.devx.software.ferias.Mail.EmailService;
 import com.devx.software.ferias.Mappers.Profile.ProfileMapper;
 import com.devx.software.ferias.Mappers.Users.FormResourcesUserMapper;
 import com.devx.software.ferias.Mappers.Users.UserInstitutionSelectMapper;
@@ -45,6 +46,8 @@ public class UserService {
     private final ProfileMapper profileMapper;
     private final UserMapper userMapper;
 
+    @Autowired 
+    EmailService emailService;
 
     @Autowired
     public UserService(
@@ -185,12 +188,17 @@ public class UserService {
             userRequest.addPerfil(profile);
         }
         UserEntity response = this.usersRepository.save(userRequest);
-        Mailgun mailgun = new Mailgun();
+        /*Mailgun mailgun = new Mailgun();
         mailgun.sendBasicEmail(
                 "Registro de nuevo usuario - Tu estado industrial",
                 userRequest.getEmail(),
                 this.registrationEmailContent(userRequest.getNombre(), userRequest.getEmail(), newPassword)
-        );
+        );*/
+        this.emailService.sendEmail(
+                userRequest.getEmail(), 
+                "Registro de nuevo usuario - Tu estado industrial", 
+                this.registrationEmailContent(userRequest.getNombre(), userRequest.getEmail(), newPassword)
+                );
         return response;
     }
 

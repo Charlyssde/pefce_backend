@@ -35,6 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -60,7 +61,10 @@ public class EventsController {
             CatalogsService catalogsService,
             EnterprisesService directorioEmpresarialService,
             UserService userService,
-            EventsService eventsService, EncuestasService encuestasService, SistemaRepository sistemaRepository, NotificationsService notificationsService) {
+            EventsService eventsService, 
+            EncuestasService encuestasService, 
+            SistemaRepository sistemaRepository, 
+            NotificationsService notificationsService) {
         this.eventsRepository = eventsRepository;
         this.catalogsService = catalogsService;
         this.directorioEmpresarialService = directorioEmpresarialService;
@@ -128,7 +132,7 @@ public class EventsController {
     public ResponseEntity<List<EventEntity>> page() {
         HttpHeaders headers = new HttpHeaders();
         try {
-            List<EventEntity> response = eventsService.page();
+            List<EventEntity> response = this.eventsRepository.findAllByStatus();
 
             headers.set("200", "Consulta exitosa");
             return new ResponseEntity<>(response,headers, HttpStatus.OK);
@@ -351,7 +355,21 @@ public class EventsController {
         }
     }
 
-
+    @GetMapping("/findByIdUsuario/{id}")
+        public ResponseEntity<List<EventEntity>> findByIdUsuario(@PathVariable Long id) {
+        HttpHeaders headers = new HttpHeaders();
+        try {
+           List<EventEntity> responseData = eventsService.listByIdUsuario(id);
+           if(responseData!=null) {
+               headers.set("200", "Consulta exitosa");
+               return new ResponseEntity<>(responseData, headers, HttpStatus.OK);
+           } else {
+               return new ResponseEntity("No se encontró información", HttpStatus.NOT_FOUND);
+           }
+        } catch (Exception e) {
+           return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     /*
     @GetMapping("/page/}")
@@ -450,21 +468,6 @@ public class EventsController {
 //
 
 //
-//    @GetMapping("/findByIdUsuario/{id}")
-//    public ResponseEntity<List<EventoEmpresaEntity>> findByIdUsuario(@PathVariable Long id) {
-//        HttpHeaders headers = new HttpHeaders();
-//        try {
-//            List<EventoEmpresaEntity> responseData = eventoEmpresaService.listByIdUsuario(id);
-//            if(responseData!=null) {
-//                headers.set("200", "Consulta exitosa");
-//                return new ResponseEntity<>(responseData, headers, HttpStatus.OK);
-//            } else {
-//                return new ResponseEntity("No se encontró información", HttpStatus.NOT_FOUND);
-//            }
-//        } catch (Exception e) {
-//            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
 //
 
 //

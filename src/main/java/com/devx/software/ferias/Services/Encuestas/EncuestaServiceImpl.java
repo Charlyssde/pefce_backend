@@ -17,6 +17,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.devx.software.ferias.Repositories.Preguntas.PreguntaRepository;
+import com.devx.software.ferias.Repositories.Users.UsersRepository;
 
 /**
  *
@@ -26,13 +27,17 @@ import com.devx.software.ferias.Repositories.Preguntas.PreguntaRepository;
 public class EncuestaServiceImpl implements EncuestaService{
     
     private final EncuestaRepository encuestaRepository;
+    private final UsersRepository  usersRepository;
+    private final EmpresasEncuestasEntityRepository   empresasEncuestasEntityRepository ;
 
     @Autowired
-     public EncuestaServiceImpl(EncuestaRepository encuestaRepository) {
+    public EncuestaServiceImpl(EncuestaRepository encuestaRepository, UsersRepository usersRepository, EmpresasEncuestasEntityRepository empresasEncuestasEntityRepository) {
         this.encuestaRepository = encuestaRepository;
+        this.usersRepository = usersRepository;
+        this.empresasEncuestasEntityRepository = empresasEncuestasEntityRepository;
     }
-    
 
+ 
     @Override
     public List<Encuestas> findAll() {
         return  encuestaRepository.findAll();
@@ -45,14 +50,40 @@ public class EncuestaServiceImpl implements EncuestaService{
     }
 
     @Override
-    public Encuestas save(Encuestas Encuestas) {
-   
-        return encuestaRepository.save(Encuestas);
+    public Encuestas save(Encuestas encuestas) {
+
+        Encuestas nueva = new Encuestas();
+        nueva.setCreadoPor(encuestas.getCreadoPor());
+        nueva.setDescripcion(encuestas.getDescripcion());
+        nueva.setEmpresas(encuestas.getEmpresas());
+        nueva.setFechaCreacion(new Date());
+        nueva.setNombre(encuestas.getNombre());
+        encuestaRepository.save(nueva);
+
+//        List<EnterpriseEntity> listempresa = (List<EnterpriseEntity>) encuestas.getEmpresas();
+//        for (EnterpriseEntity enterpriseEntity : listempresa) {
+//            EmpresasEncuestasEntity nuevarelacion = new EmpresasEncuestasEntity();
+//            nuevarelacion.setEncuesta(encuestas);
+//            nuevarelacion.setEmpresa(enterpriseEntity);
+//            empresasEncuestasEntityRepository.save(nuevarelacion);
+//        }
+
+        return null;
     }
 
     @Override
     public Encuestas update(Long id, Encuestas encuestas) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Encuestas toUpdate = this.encuestaRepository.findById(id).get();
+         
+        toUpdate.setCreadoPor(encuestas.getCreadoPor());
+        toUpdate.setDescripcion(encuestas.getDescripcion());
+        toUpdate.setEmpresas(encuestas.getEmpresas());
+        toUpdate.setFechaCreacion(toUpdate.getFechaCreacion());
+        toUpdate.setNombre(encuestas.getNombre());
+        
+        encuestaRepository.save(toUpdate);
+        
+        return null;
     }
 
     @Override

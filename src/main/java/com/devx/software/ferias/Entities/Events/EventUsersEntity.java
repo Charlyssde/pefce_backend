@@ -1,6 +1,12 @@
 package com.devx.software.ferias.Entities.Events;
 
+import com.devx.software.ferias.Entities.Catalogs.MunicipiosEntity;
 import com.devx.software.ferias.Entities.Users.UserEntity;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -14,12 +20,22 @@ public class EventUsersEntity {
     private Long id;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "id_evento")
+    @JoinColumn(name = "evento_id")
     private EventEntity evento;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "id_usuario")
+    @JoinColumn(name = "usuario_id")
     private UserEntity usuario;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "id_municipio")
+    private MunicipiosEntity municipio;
+
+    @Column(nullable = true)
+    private int males;
+
+    @Column(nullable = true)
+    private int females;
 
     @Column(nullable = true)
     private String estatus;
@@ -87,5 +103,29 @@ public class EventUsersEntity {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public MunicipiosEntity getMunicipio(){
+        return this.municipio;
+    }
+
+    public void setMunicipo(MunicipiosEntity municipiosEntity){
+        this.municipio = municipiosEntity;
+    }
+
+    public int getMales(){
+        return this.males;
+    }
+
+    public void setMales(int males){
+        this.males = males;
+    }
+
+    public int getFemales(){
+        return this.females;
+    }
+
+    public void setFemales(int females){
+        this.females = females;
     }
 }

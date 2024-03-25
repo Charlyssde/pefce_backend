@@ -21,4 +21,6 @@ public interface PreguntaService {
     Preguntas update(Long id, Preguntas preguntas);
     
     Preguntas deleted (Long id);
+    
+    List<Preguntas> findAllbyencuesta(Long id);
 }

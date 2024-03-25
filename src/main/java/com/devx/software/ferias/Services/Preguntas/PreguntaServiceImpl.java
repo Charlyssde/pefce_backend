@@ -8,6 +8,7 @@ import com.devx.software.ferias.Entities.Encuestas.Encuestas;
 import com.devx.software.ferias.Entities.Preguntas.Preguntas;
 import com.devx.software.ferias.Repositories.Preguntas.PreguntaRepository;
 import com.devx.software.ferias.Services.Encuestas.EncuestaService;
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,7 @@ public class PreguntaServiceImpl  implements PreguntaService {
 
     @Override
     public Preguntas save(Preguntas preguntas) {
+        preguntas.setFechaCreacion(new Date());
         return preguntaRepository.save(preguntas);
     }
 
@@ -49,6 +51,11 @@ public class PreguntaServiceImpl  implements PreguntaService {
     @Override
     public Preguntas deleted(Long id) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public List<Preguntas> findAllbyencuesta(Long id) {
+        return preguntaRepository.findAllbyencuesta(id);
     }
     
  
