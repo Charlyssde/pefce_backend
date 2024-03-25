@@ -16,3 +16,41 @@ ALTER TABLE public.a_minuta__a_archivo ALTER COLUMN tamaño TYPE int8 USING tama
 -- MODIFICACION A TABLA  a_empresas
 ALTER TABLE public.a_empresas
 ADD autorizado boolean DEFAULT false NULL;
+
+
+--Tabla eventos_participantes--
+alter table a_evento__a_participantes
+    add activo boolean;
+
+alter table a_evento__a_participantes
+    add males integer;
+
+alter table a_evento__a_participantes
+    add females integer;
+
+alter table a_evento__a_participantes
+    add id_municipio integer;
+
+alter table a_evento__a_participantes
+    add constraint a_evento__a_participantes_a_municipios_id_fk
+        foreign key (id_municipio) references a_municipios;
+
+alter table a_evento__a_participantes
+    add id integer generated always as identity;
+
+alter table a_evento__a_participantes
+    add estatus varchar(255);
+
+alter table a_evento__a_participantes
+    drop constraint a_evento__a_participantes_pk;
+
+alter table a_evento__a_participantes
+    add constraint a_evento__a_participantes_pk
+        primary key (id);
+
+alter table a_evento__a_participantes
+    add created_at timestamp default now();
+
+alter table a_evento__a_participantes
+    add updated_at timestamp default now();
+
