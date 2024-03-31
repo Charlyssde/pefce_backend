@@ -5,7 +5,10 @@
 package com.devx.software.ferias.Services.Encuestas;
 
 import com.devx.software.ferias.DTOs.Encuesta.EncuestasDTO;
+import com.devx.software.ferias.Entities.Encuestas.EmpresasEncuestasEntity;
 import com.devx.software.ferias.Entities.Encuestas.Encuestas;
+import com.devx.software.ferias.Entities.Enterprises.EnterpriseEntity;
+
 import java.util.List;
 
 /**
@@ -22,4 +25,6 @@ public interface EncuestaService {
     Encuestas update(Long id, Encuestas encuestas);
     
     Encuestas deleted (Long id);
+
+    List<EmpresasEncuestasEntity> findAllByEnterpriseEntityId(EnterpriseEntity id);
 }

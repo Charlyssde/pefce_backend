@@ -90,7 +90,11 @@ public class EncuestaServiceImpl implements EncuestaService{
     public Encuestas deleted(Long id) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
-    
-    
+
+    @Override
+    public List<EmpresasEncuestasEntity> findAllByEnterpriseEntityId(EnterpriseEntity id) {
+        return this.empresasEncuestasEntityRepository.findAllByEmpresa(id);
+    }
+
+
 }

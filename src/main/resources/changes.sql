@@ -89,3 +89,17 @@ CREATE TABLE preguntas (
 	CONSTRAINT preguntas_creado_por_fkey FOREIGN KEY (creado_por) REFERENCES a_usuarios(id),
 	CONSTRAINT preguntas_id_encuesta_fkey FOREIGN KEY (id_encuesta) REFERENCES encuestas(id)
 );
+
+CREATE TABLE respuestas (
+    id serial4 NOT NULL,
+    respuesta int8 NULL,
+    id_pregunta int8 NULL,
+    id_empresa int8 NULL,
+    id_encuesta int8 NULL,
+    creado_por int8 NULL,
+    CONSTRAINT respuestas_pkey PRIMARY KEY (id),
+    CONSTRAINT respuestas_id_pregunta_fkey FOREIGN KEY (id_pregunta) REFERENCES preguntas(id),
+    CONSTRAINT respuestas_id_empresa_fkey FOREIGN KEY (id_empresa) REFERENCES a_empresas(id),
+    CONSTRAINT respuestas_id_encuesta_fkey FOREIGN KEY (id_encuesta) REFERENCES encuestas(id),
+    CONSTRAINT respuestas_creado_por_fkey FOREIGN KEY (creado_por) REFERENCES a_usuarios(id)
+);
