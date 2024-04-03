@@ -508,4 +508,10 @@ public class EnterprisesController {
             return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
+      @CrossOrigin(origins = "*")
+    @RequestMapping(value = "/all-empresas", method = RequestMethod.GET)
+    public ResponseEntity<List<EnterpriseEntity>> findAllArchivo() {
+        return ResponseEntity.status(HttpStatus.OK).body(enterprisesService.getallempresas());
+    }
         }

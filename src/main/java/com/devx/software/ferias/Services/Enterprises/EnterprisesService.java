@@ -977,4 +977,9 @@ public class EnterprisesService {
         return this.enterprisesRepository.obtenerTotalPorSector();
     }
     
+    
+    public List<EnterpriseEntity> getallempresas (){
+    return enterprisesRepository.findAllByEstatusTrue();
+    }
+    
 }
