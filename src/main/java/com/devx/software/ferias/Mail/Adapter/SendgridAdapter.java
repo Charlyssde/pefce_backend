@@ -5,6 +5,7 @@ import com.devx.software.ferias.Mail.Utils.Utils;
 import com.sendgrid.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -12,9 +13,11 @@ public class SendgridAdapter implements MailGateway {
 
     private static final Logger logger = LoggerFactory.getLogger(SendgridAdapter.class);
 
-    private final String FROM = "ssedecop@gmail.com";
+    @Value("${spring.sendgrid.proxy.host}")
+    private String FROM;
 
-    private final String API = "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";
+    @Value("${sendgrid.apikey}")
+    private String API;
 
     @Override
     public void sendEmail(String to, String subject, String body) {

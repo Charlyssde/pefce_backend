@@ -103,3 +103,13 @@ CREATE TABLE respuestas (
     CONSTRAINT respuestas_id_encuesta_fkey FOREIGN KEY (id_encuesta) REFERENCES encuestas(id),
     CONSTRAINT respuestas_creado_por_fkey FOREIGN KEY (creado_por) REFERENCES a_usuarios(id)
 );
+
+--CREACION DE LAS TABLAS PARA MINUTAS
+CREATE TABLE a_usuario__a_minuta (
+     id serial4 NOT NULL,
+     minuta_id int8 NULL,
+     usuario_id int8 NULL,
+     CONSTRAINT a_usuario__a_minuta_pkey PRIMARY KEY (id),
+     CONSTRAINT a_usuario__a_minuta_minuta_id_fkey FOREIGN KEY (minuta_id) REFERENCES a_minutas(id),
+     CONSTRAINT a_usuario__a_minuta_usuario_id_fkey FOREIGN KEY (usuario_id) REFERENCES a_usuarios(id)
+);
