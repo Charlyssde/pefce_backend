@@ -16,7 +16,7 @@ public class SendgridAdapter implements MailGateway {
     @Value("${spring.sendgrid.proxy.host}")
     private String FROM;
 
-    @Value("${sendgrid.apikey}")
+    @Value("${spring.sendgrid.api-key}")
     private String API;
 
     @Override
