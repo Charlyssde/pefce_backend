@@ -113,3 +113,35 @@ CREATE TABLE a_usuario__a_minuta (
      CONSTRAINT a_usuario__a_minuta_minuta_id_fkey FOREIGN KEY (minuta_id) REFERENCES a_minutas(id),
      CONSTRAINT a_usuario__a_minuta_usuario_id_fkey FOREIGN KEY (usuario_id) REFERENCES a_usuarios(id)
 );
+
+/************************ABRIL 2024***********************************/
+
+CREATE TABLE public.a_dsp (
+	id int GENERATED ALWAYS AS IDENTITY NOT NULL,
+	solicitud_sefiplan timestamp DEFAULT now() NULL,
+	numero_dsp varchar NULL,
+	autorizacion timestamp DEFAULT now() NULL,
+	recepcion timestamp DEFAULT now() NULL,
+	importe float4 NULL,
+	descripcion varchar NULL,
+	concepto varchar NULL,
+	codigo_presupuestal varchar NULL,
+	vigencia timestamp DEFAULT now() NULL,
+	solicitud timestamp DEFAULT null NULL,
+	solicitud_prorroga timestamp DEFAULT null NULL,
+	oficio_prorroga timestamp DEFAULT null NULL,
+	autorizacion_prorroga timestamp DEFAULT null NULL,
+	recepcion_prorroga timestamp DEFAULT null NULL,
+	file varchar NULL,
+	CONSTRAINT a_dsp_pk PRIMARY KEY (id)
+);
+
+ALTER TABLE public.a_dsp ALTER COLUMN file TYPE int4 USING file::int4;
+ALTER TABLE public.a_dsp ADD CONSTRAINT a_dsp_a_archivos_fk FOREIGN KEY (file) REFERENCES public.a_archivos(id);
+
+/**********************11/07/2024*****************/
+ALTER TABLE public.a_archivos ALTER COLUMN url DROP NOT NULL;
+ALTER TABLE public.a_archivos ALTER COLUMN mime DROP NOT NULL;
+ALTER TABLE public.a_archivos ALTER COLUMN created_at DROP NOT NULL;
+ALTER TABLE public.a_archivos ALTER COLUMN estatus DROP NOT NULL;
+
