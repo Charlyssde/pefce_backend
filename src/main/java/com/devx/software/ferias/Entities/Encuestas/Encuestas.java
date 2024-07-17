@@ -5,6 +5,7 @@
 package com.devx.software.ferias.Entities.Encuestas;
 
 import com.devx.software.ferias.Entities.Enterprises.EnterpriseEntity;
+import com.devx.software.ferias.Entities.Events.EventEntity;
 import com.devx.software.ferias.Entities.Users.UserEntity;
 import java.io.Serializable;
 import java.util.Date;
@@ -53,17 +54,26 @@ public class Encuestas implements Serializable  {
         inverseJoinColumns = @JoinColumn(name = "id_empresa")
     )
     private Set<EnterpriseEntity> empresas;
+    
+    @ManyToMany
+    @JoinTable(
+            name = "eventos_encuestas",
+            joinColumns = @JoinColumn(name = "id_encuesta"),
+            inverseJoinColumns = @JoinColumn(name = "id_evento")
+    )
+    private Set<EventEntity> eventos;
 
     public Encuestas() {
     }
 
-    public Encuestas(Long id, String nombre, String descripcion, Date fechaCreacion, UserEntity creadoPor, Set<EnterpriseEntity> empresas) {
+    public Encuestas(Long id, String nombre, String descripcion, Date fechaCreacion, UserEntity creadoPor, Set<EnterpriseEntity> empresas, Set<EventEntity> eventos) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.fechaCreacion = fechaCreacion;
         this.creadoPor = creadoPor;
         this.empresas = empresas;
+        this.eventos = eventos;
     }
 
     public Long getId() {
@@ -113,6 +123,13 @@ public class Encuestas implements Serializable  {
     public void setEmpresas(Set<EnterpriseEntity> empresas) {
         this.empresas = empresas;
     }
-    
-    
+
+    public Set<EventEntity> getEventos() {
+        return eventos;
+    }
+
+    public void setEventos(Set<EventEntity> eventos) {
+        this.eventos = eventos;
+    }
+ 
 }

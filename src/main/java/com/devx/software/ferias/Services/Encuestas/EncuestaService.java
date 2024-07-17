@@ -21,7 +21,7 @@ public interface EncuestaService {
     Encuestas findById(Long id);
     
     Encuestas save(Encuestas encuestas);
-
+    
     Encuestas update(Long id, Encuestas encuestas);
     
     Encuestas deleted (Long id);

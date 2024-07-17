@@ -137,4 +137,15 @@ public interface EnterprisesRepository extends JpaRepository<EnterpriseEntity, L
             "    join a_catalogos ac on ac.id = ae.sector_id\n" +
             "    group by ac.nombre", nativeQuery = true)
     List<Object[]> obtenerTotalPorSector();
+    
+    
+      @Query(
+        value = "SELECT ae.* FROM a_empresa__a_contacto auc\n" +
+"	INNER JOIN a_evento__a_participantes aep on auc.usuario_id = aep.usuario_id\n" +
+"	INNER JOIN a_empresas ae on auc.empresa_id = ae.id\n" +
+"	WHERE aep.evento_id IN (:eventoIds)",
+        nativeQuery = true
+    )
+    List<EnterpriseEntity> findEnterpriseByEventoIds(@Param("eventoIds") List<Long> eventoIds);
+    
 }

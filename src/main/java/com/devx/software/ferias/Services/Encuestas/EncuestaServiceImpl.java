@@ -8,9 +8,12 @@ import com.devx.software.ferias.DTOs.Encuesta.EncuestasDTO;
 import com.devx.software.ferias.Entities.Encuestas.EmpresasEncuestasEntity;
 import com.devx.software.ferias.Entities.Encuestas.Encuestas;
 import com.devx.software.ferias.Entities.Enterprises.EnterpriseEntity;
+import com.devx.software.ferias.Entities.Events.EventEntity;
 import com.devx.software.ferias.Entities.Preguntas.Preguntas;
 import com.devx.software.ferias.Repositories.Encuestas.EmpresasEncuestasEntityRepository;
 import com.devx.software.ferias.Repositories.Encuestas.EncuestaRepository;
+import com.devx.software.ferias.Repositories.Events.EventEncuentasEntityRepository;
+import com.devx.software.ferias.Repositories.Events.EventsRepository;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -36,7 +39,7 @@ public class EncuestaServiceImpl implements EncuestaService{
         this.usersRepository = usersRepository;
         this.empresasEncuestasEntityRepository = empresasEncuestasEntityRepository;
     }
-
+ 
  
     @Override
     public List<Encuestas> findAll() {
@@ -58,17 +61,9 @@ public class EncuestaServiceImpl implements EncuestaService{
         nueva.setEmpresas(encuestas.getEmpresas());
         nueva.setFechaCreacion(new Date());
         nueva.setNombre(encuestas.getNombre());
-        encuestaRepository.save(nueva);
-
-//        List<EnterpriseEntity> listempresa = (List<EnterpriseEntity>) encuestas.getEmpresas();
-//        for (EnterpriseEntity enterpriseEntity : listempresa) {
-//            EmpresasEncuestasEntity nuevarelacion = new EmpresasEncuestasEntity();
-//            nuevarelacion.setEncuesta(encuestas);
-//            nuevarelacion.setEmpresa(enterpriseEntity);
-//            empresasEncuestasEntityRepository.save(nuevarelacion);
-//        }
-
-        return null;
+        nueva.setEventos(encuestas.getEventos());
+        
+        return encuestaRepository.save(nueva);
     }
 
     @Override
@@ -96,5 +91,5 @@ public class EncuestaServiceImpl implements EncuestaService{
         return this.empresasEncuestasEntityRepository.findAllByEmpresa(id);
     }
 
-
-}
+        
+    }

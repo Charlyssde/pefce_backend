@@ -95,4 +95,10 @@ public interface EventsRepository extends JpaRepository<EventEntity, Long> {
 
         String getEstatus();
     }
+    
+    @Query(value = "select ae.* from a_eventos ae\n"
+            + "INNER JOIN eventos_encuestas ee ON ae.id = ee.id_evento\n"
+            + "where ee.id_encuesta = :id", nativeQuery = true)
+    List<EventEntity> getAllByEvent(long id);
+    
 }

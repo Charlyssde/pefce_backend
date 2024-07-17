@@ -982,4 +982,8 @@ public class EnterprisesService {
     return enterprisesRepository.findAllByEstatusTrue();
     }
     
+    public List<EnterpriseEntity> getallempresasByEvento (List<Long> eventoIds){
+    return enterprisesRepository.findEnterpriseByEventoIds(eventoIds);
+    }
+    
 }
