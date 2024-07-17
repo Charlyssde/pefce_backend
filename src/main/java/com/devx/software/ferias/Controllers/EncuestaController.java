@@ -5,6 +5,7 @@
 package com.devx.software.ferias.Controllers;
 
 import com.devx.software.ferias.DTOs.Capacitacion.PreguntasDTO;
+import com.devx.software.ferias.DTOs.Encuesta.EncuestasDTO;
 import com.devx.software.ferias.DTOs.Encuestas.RespuestasDTO;
 import com.devx.software.ferias.DTOs.Enterprises.EnterpriseListUserFilterDTO;
 import com.devx.software.ferias.Entities.Capacitacion.PreguntasEntity;
@@ -131,5 +132,11 @@ public class EncuestaController {
         this.respuestasService.saveAll(respuestasList);
 
         return ResponseEntity.status(HttpStatus.OK).body(respuestas);
+    }
+    
+    @CrossOrigin(origins = "*")
+    @RequestMapping(value = "/evento/{id}", method = RequestMethod.GET)
+    public ResponseEntity<Encuestas> getEncuestaDTO(@PathVariable long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(encuestaService.findById(id));
     }
 }

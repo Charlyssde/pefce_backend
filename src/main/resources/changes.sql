@@ -113,3 +113,11 @@ CREATE TABLE a_usuario__a_minuta (
      CONSTRAINT a_usuario__a_minuta_minuta_id_fkey FOREIGN KEY (minuta_id) REFERENCES a_minutas(id),
      CONSTRAINT a_usuario__a_minuta_usuario_id_fkey FOREIGN KEY (usuario_id) REFERENCES a_usuarios(id)
 );
+
+CREATE TABLE eventos_encuestas (
+    id SERIAL PRIMARY KEY,
+    id_evento int8,
+    id_encuesta int8,
+    FOREIGN KEY (id_evento) REFERENCES a_eventos(id),
+    FOREIGN KEY (id_encuesta) REFERENCES encuestas(id)
+);

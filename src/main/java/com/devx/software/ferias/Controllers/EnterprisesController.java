@@ -509,9 +509,15 @@ public class EnterprisesController {
         }
     }
     
-      @CrossOrigin(origins = "*")
+    @CrossOrigin(origins = "*")
     @RequestMapping(value = "/all-empresas", method = RequestMethod.GET)
     public ResponseEntity<List<EnterpriseEntity>> findAllArchivo() {
         return ResponseEntity.status(HttpStatus.OK).body(enterprisesService.getallempresas());
     }
-        }
+
+    @CrossOrigin(origins = "*")
+    @RequestMapping(value = "/evento", method = RequestMethod.GET)
+    public ResponseEntity<?> getList(@RequestParam("eventoIds") List<Long> eventoIds) {
+        return ResponseEntity.status(HttpStatus.OK).body(this.enterprisesService.getallempresasByEvento(eventoIds));
+    }
+}
