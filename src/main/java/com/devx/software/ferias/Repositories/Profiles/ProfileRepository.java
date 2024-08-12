@@ -95,6 +95,15 @@ public interface ProfileRepository extends JpaRepository<ProfileEntity, Long> {
                     "FROM ProfileEntity as profile " +
                     "WHERE profile.tipo = 'institución' " +
                     "AND profile.nivel > 1 " +
+                    "ORDER BY profile.nivel ASC, profile.area ASC"
+    )
+    List<ProfileEntity> getByInstitution();
+
+    @Query(
+            "SELECT profile " +
+                    "FROM ProfileEntity as profile " +
+                    "WHERE profile.tipo = 'institución' " +
+                    "AND profile.nivel > 1 " +
                     "AND LOWER(profile.nombre) LIKE LOWER(CONCAT('%',?1,'%')) " +
                     "ORDER BY profile.nivel ASC, profile.area ASC"
     )

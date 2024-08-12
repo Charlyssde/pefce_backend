@@ -191,4 +191,8 @@ public class ProfileService {
     public List<ProfileMenuEntity> getPermissionsByProfileId(Long profileId) throws Exception {
         return this.profileMenuRepository.findAllByPerfilId(profileId);
     }
+
+    public List<ProfileEntity> getAllByInstitution() throws Exception {
+        return this.profileRepository.getByInstitution();
+    }
 }

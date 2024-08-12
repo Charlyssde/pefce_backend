@@ -1,5 +1,6 @@
 package com.devx.software.ferias.DTOs.Requests;
 
+import com.devx.software.ferias.Entities.Profiles.ProfileEntity;
 import com.devx.software.ferias.Entities.Users.UserEntity;
 import com.devx.software.ferias.Entities.Catalogs.CatalogsEntity;
 import javax.persistence.*;
@@ -43,6 +44,10 @@ public class RequestListDTO {
 
     @Column(name = "updated_at", nullable = true)
     private Date updatedAt;
+
+    @OneToOne
+    @JoinColumn(name = "perfil_id", nullable = true)
+    private ProfileEntity perfilId;
 
 
     public Long getId() {
@@ -133,4 +138,11 @@ public class RequestListDTO {
         this.updatedAt = updatedAt;
     }
 
+    public ProfileEntity getPerfilId() {
+        return perfilId;
+    }
+
+    public void setPerfilId(ProfileEntity perfilId) {
+        this.perfilId = perfilId;
+    }
 }

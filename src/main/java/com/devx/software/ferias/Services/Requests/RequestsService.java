@@ -56,7 +56,8 @@ public class RequestsService {
     public Page<RequestEntity> pageRequests(
             Pageable pageable,
             Long usuarioId,
-            String perfil
+            String perfil,
+            Long perfilId
     ) throws Exception{
         Page<RequestEntity> respuesta;
         if( perfil.equals("Empresa") ){
@@ -65,9 +66,9 @@ public class RequestsService {
                     usuarioId
             );
         }else{
-            respuesta = this.requestsRepository.buscarSolicitudesPorResponsable(
+            respuesta = this.requestsRepository.buscarSolicitudesPorPerfil(
                     pageable,
-                    usuarioId
+                    perfilId
             );
         }
         return respuesta;

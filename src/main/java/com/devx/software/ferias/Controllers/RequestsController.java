@@ -7,6 +7,7 @@ import com.devx.software.ferias.DTOs.Shared.PaginationResponse;
 import com.devx.software.ferias.Entities.Notifications.NotificationsEntity;
 import com.devx.software.ferias.Entities.Requests.RequestEntity;
 import com.devx.software.ferias.Entities.Sistema.SistemaEntity;
+import com.devx.software.ferias.Mail.EmailService;
 import com.devx.software.ferias.Misc.Mailgun;
 import com.devx.software.ferias.Repositories.Sistema.SistemaRepository;
 import com.devx.software.ferias.Services.Notifications.NotificationsService;
@@ -47,32 +48,26 @@ public class RequestsController {
     private final RequestsService requestsService;
 
     private final CatalogsService catalogsService;
-    private final EnterprisesService directorioEmpresarialService;
-
-
-    private final EventsRepository eventsRepository;
-
-    private final SistemaRepository sistemaRepository;
 
     private final NotificationsService notificationsService;
+
+    private final EmailService emailService;
 
     @Autowired
     public RequestsController(
             RequestsRepository requestsRepository,
             UserService userService,
-            RequestListMapper requestListMapper, RequestsService requestsService, CatalogsService catalogsService,
-            EnterprisesService directorioEmpresarialService,
-            EventsRepository eventsRepository,
-            SistemaRepository sistemaRepository, NotificationsService notificationsService) {
+            RequestListMapper requestListMapper,
+            RequestsService requestsService,
+            CatalogsService catalogsService,
+            NotificationsService notificationsService, EmailService emailService) {
         this.requestsRepository = requestsRepository;
         this.userService = userService;
         this.requestListMapper = requestListMapper;
         this.requestsService = requestsService;
         this.catalogsService = catalogsService;
-        this.directorioEmpresarialService = directorioEmpresarialService;
-        this.eventsRepository = eventsRepository;
-        this.sistemaRepository = sistemaRepository;
         this.notificationsService = notificationsService;
+        this.emailService = emailService;
     }
 
     @GetMapping("/formRequiredData/{idSolicitud}")
@@ -128,8 +123,9 @@ public class RequestsController {
             solicitud.setFolio(this.folioSolicitud(solicitud.getId(), solicitud.getCreatedAt()));
             solicitud = requestsRepository.save(solicitud);
 
-            Mailgun mailgun = new Mailgun();
-            mailgun.sendBasicEmail(" Solicitud de servicio recibida", solicitud.getUsuarioSolicitanteId().getEmail() , "Su solicitud de servicio ha sido recibida con folio: " +  solicitud.getFolio() +", puede dar seguimiento al mismo en su panel de solicitudes." );
+            //Mailgun mailgun = new Mailgun();
+            //mailgun.sendBasicEmail(" Solicitud de servicio recibida", solicitud.getUsuarioSolicitanteId().getEmail() , "Su solicitud de servicio ha sido recibida con folio: " +  solicitud.getFolio() +", puede dar seguimiento al mismo en su panel de solicitudes." );
+            this.emailService.sendEmail(solicitud.getUsuarioSolicitanteId().getEmail(), "Solicitud de servicio recibida", "Su solicitud de servicio ha sido recibida con folio: " +  solicitud.getFolio() +", puede dar seguimiento al mismo en su panel de solicitudes.");
 
             NotificationsEntity ne = new NotificationsEntity();
             ne.setTexto( "Se ha recibido una solicitud de servicio con folio: " + solicitud.getFolio() + ".");
@@ -160,7 +156,8 @@ public class RequestsController {
             Page<RequestEntity> pageDataset = this.requestsService.pageRequests(
                     pegeable,
                     usuario.getId(),
-                    perfil
+                    perfil,
+                    usuario.getPerfiles().get(0).getId()
             );
 
             PaginationResponse response = new PaginationResponse();

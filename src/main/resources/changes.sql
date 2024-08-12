@@ -121,3 +121,12 @@ CREATE TABLE eventos_encuestas (
     FOREIGN KEY (id_evento) REFERENCES a_eventos(id),
     FOREIGN KEY (id_encuesta) REFERENCES encuestas(id)
 );
+
+
+--MODIFICACION A TABLA a_solicitudes
+alter table a_solicitudes
+    add perfil_id integer;
+
+alter table a_solicitudes
+    add constraint a_solicitudes_perfil_id_fk
+        foreign key (perfil_id) references a_perfiles;
