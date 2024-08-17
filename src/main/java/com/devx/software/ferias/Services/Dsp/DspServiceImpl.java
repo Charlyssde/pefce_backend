@@ -49,7 +49,12 @@ public class DspServiceImpl implements DspService {
         return newEntity;
     }
 
+    public List<DSP> getSearch(String search){
+            return dspRepository.search(search);
+}    
+
     public List<DSP> getAll(){
+
         return dspRepository.findAll();
     }
 

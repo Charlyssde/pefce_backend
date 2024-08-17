@@ -35,9 +35,13 @@ public class DspController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<DSP>> getAll() {
+    public ResponseEntity<List<DSP>> getAll(
+        @RequestParam(required = false, name = "search") String search
+    ) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("200", "Consulta exitosa");
+        System.out.println("Param-" +search);
+        if( search.length() != 0) return new ResponseEntity<>(this.dspService.getSearch(search), headers, HttpStatus.SC_OK);
         return new ResponseEntity<>(this.dspService.getAll(), headers, HttpStatus.SC_OK);
     }
 
