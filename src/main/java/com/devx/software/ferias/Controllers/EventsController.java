@@ -1,6 +1,7 @@
 package com.devx.software.ferias.Controllers;
 
 import com.devx.software.ferias.DTOs.Catalogs.CatalogsDTO;
+import com.devx.software.ferias.DTOs.Enterprises.EnterpriseListUserFilterDTO;
 import com.devx.software.ferias.Entities.Autodiagnosticos.AutodiagnosticoEntity;
 import com.devx.software.ferias.Entities.Encuestas.EncuestaEntity;
 import com.devx.software.ferias.Entities.Events.EventEntity;
@@ -11,6 +12,8 @@ import com.devx.software.ferias.Misc.Mailgun;
 import com.devx.software.ferias.Services.Encuestas.EncuestasService;
 import com.devx.software.ferias.Services.Events.EventsService;
 import com.devx.software.ferias.DTOs.Events.EventContactPageDTO;
+import com.devx.software.ferias.Entities.Encuestas.EmpresasEncuestasEntity;
+import com.devx.software.ferias.Entities.Encuestas.Encuestas;
 import com.devx.software.ferias.Repositories.Events.EventsRepository;
 
 import com.devx.software.ferias.Repositories.Sistema.SistemaRepository;
@@ -23,6 +26,8 @@ import com.devx.software.ferias.Entities.Enterprises.EnterpriseEntity;
 import com.devx.software.ferias.Entities.Users.UserEntity;
 import com.devx.software.ferias.Services.Users.UserService;
 import com.devx.software.ferias.Entities.Files.FileEntity;
+import com.devx.software.ferias.Repositories.Encuestas.EmpresasEncuestasEntityRepository;
+import com.devx.software.ferias.Repositories.Encuestas.EncuestaRepository;
 import com.devx.software.ferias.Services.Catalogs.CatalogsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,20 +56,14 @@ public class EventsController {
     private final EventsService eventsService;
     private final EncuestasService encuestasService;
     private final SistemaRepository sistemaRepository;
-
+    private final EncuestaRepository encuestaRepository;
     private final NotificationsService notificationsService;
+    private final EmpresasEncuestasEntityRepository empresasEncuestasEntityRepository;
+    private final EnterprisesService enterprisesService;
     private final HttpHeaders headers = new HttpHeaders();
 
     @Autowired
-    public EventsController(
-            EventsRepository eventsRepository,
-            CatalogsService catalogsService,
-            EnterprisesService directorioEmpresarialService,
-            UserService userService,
-            EventsService eventsService, 
-            EncuestasService encuestasService, 
-            SistemaRepository sistemaRepository, 
-            NotificationsService notificationsService) {
+       public EventsController(EventsRepository eventsRepository, CatalogsService catalogsService, EnterprisesService directorioEmpresarialService, UserService userService, EventsService eventsService, EncuestasService encuestasService, SistemaRepository sistemaRepository, EncuestaRepository encuestaRepository, NotificationsService notificationsService, EmpresasEncuestasEntityRepository empresasEncuestasEntityRepository, EnterprisesService enterprisesService) {
         this.eventsRepository = eventsRepository;
         this.catalogsService = catalogsService;
         this.directorioEmpresarialService = directorioEmpresarialService;
@@ -72,7 +71,10 @@ public class EventsController {
         this.eventsService = eventsService;
         this.encuestasService = encuestasService;
         this.sistemaRepository = sistemaRepository;
+        this.encuestaRepository = encuestaRepository;
         this.notificationsService = notificationsService;
+        this.empresasEncuestasEntityRepository = empresasEncuestasEntityRepository;
+        this.enterprisesService = enterprisesService;
     }
 
     @GetMapping("")
@@ -174,6 +176,20 @@ public class EventsController {
     public ResponseEntity<EventUsersEntity> createEventoDirectorio(@RequestBody EventUsersEntity entity) {
         HttpHeaders headers = new HttpHeaders();
         try {
+            EmpresasEncuestasEntity saveEntity = new EmpresasEncuestasEntity();
+               String email = SecurityContextHolder.getContext().getAuthentication().getName();
+            UserEntity usuario = this.userService.findByEmail( email );
+            List<Encuestas> EncuestaByEvento = encuestaRepository.findByEvento(entity.getEvento().getId());
+            EnterpriseListUserFilterDTO enterpriseEntity = this.enterprisesService.findByUserId(usuario.getId());
+            EnterpriseEntity enterprise = this.enterprisesService.findById(enterpriseEntity.getId());
+            
+            for (Encuestas encuesta : EncuestaByEvento) {
+                saveEntity.setEncuesta(encuesta);
+                saveEntity.setEmpresa(enterprise);
+                empresasEncuestasEntityRepository.save(saveEntity);
+            }
+            
+            empresasEncuestasEntityRepository.save(saveEntity);
             EventUsersEntity responseData = eventsService.agregarParticipante(entity);
             headers.set("200", "Registro exitoso");
             return new ResponseEntity<>(responseData, headers, HttpStatus.OK);

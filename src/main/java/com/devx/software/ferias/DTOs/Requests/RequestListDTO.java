@@ -3,6 +3,7 @@ package com.devx.software.ferias.DTOs.Requests;
 import com.devx.software.ferias.Entities.Profiles.ProfileEntity;
 import com.devx.software.ferias.Entities.Users.UserEntity;
 import com.devx.software.ferias.Entities.Catalogs.CatalogsEntity;
+import com.devx.software.ferias.Entities.Profiles.ProfileEntity;
 import javax.persistence.*;
 import java.util.Date;
 
