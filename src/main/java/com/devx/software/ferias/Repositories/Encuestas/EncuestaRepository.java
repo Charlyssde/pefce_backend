@@ -5,7 +5,9 @@
 package com.devx.software.ferias.Repositories.Encuestas;
 
 import com.devx.software.ferias.Entities.Encuestas.Encuestas;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -15,4 +17,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EncuestaRepository extends JpaRepository<Encuestas, Long> {
     
+    @Query(value = "select * from encuestas e\n"
+            + "inner join eventos_encuestas ec on e.id = ec.id_encuesta\n"
+            + "where ec.id_evento = :id", nativeQuery = true
+
+    )
+    List<Encuestas> findByEvento(Long id);
 }
