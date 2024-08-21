@@ -46,11 +46,11 @@ public class RequestEntity {
 
     @Column(name = "updated_at", nullable = true)
     private Date updatedAt;
-    
+
     @OneToOne
     @JoinColumn(name = "perfil_id", nullable = true)
     private ProfileEntity perfilId;
-    
+
     /*
     @ManyToMany(fetch = FetchType.LAZY, cascade = {
             CascadeType.PERSIST,
@@ -233,6 +233,7 @@ public class RequestEntity {
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
+
     /*
     public List<RequestHistoryEntity> getHistorico() {
         return historico;
@@ -282,6 +283,4 @@ public class RequestEntity {
     public void setPerfilId(ProfileEntity perfilId) {
         this.perfilId = perfilId;
     }
-    
-    
 }

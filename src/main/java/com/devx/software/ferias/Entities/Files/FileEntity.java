@@ -11,7 +11,7 @@ public class FileEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "url", nullable = false, columnDefinition = "text")
+    @Column(name = "url", nullable = true, columnDefinition = "text")
     private String url;
 
     @Column(name = "caption", nullable = true)

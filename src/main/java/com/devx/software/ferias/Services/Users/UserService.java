@@ -45,9 +45,7 @@ public class UserService {
     private final UserInstitutionSelectMapper userInstitutionSelectMapper;
     private final ProfileMapper profileMapper;
     private final UserMapper userMapper;
-
-    @Autowired 
-    EmailService emailService;
+    private final EmailService emailService;
 
     @Autowired
     public UserService(
@@ -57,7 +55,8 @@ public class UserService {
             FormResourcesUserMapper formResourcesUserMapper,
             UserInstitutionSelectMapper userInstitutionSelectMapper,
             ProfileMapper profileMapper,
-            UserMapper userMapper
+            UserMapper userMapper,
+            EmailService emailService
     ) {
         this.passwordEncoder = passwordEncoder;
 
@@ -67,6 +66,7 @@ public class UserService {
         this.userInstitutionSelectMapper = userInstitutionSelectMapper;
         this.profileMapper = profileMapper;
         this.userMapper = userMapper;
+        this.emailService = emailService;
     }
 
     public static int getRandomIndex(int max) {
@@ -233,12 +233,17 @@ public class UserService {
             for (ProfileEntity profile : profiles) {
                 userRequest.addPerfil(profile);
             }
-            Mailgun mailgun = new Mailgun();
+            this.emailService.sendEmail(
+                userRequest.getEmail(),
+                "Actualización de su registro de usuario - Tu estado industrial",
+                "Se ha realizado una actualización en el registro de tu usuario, si no solicitaste este cambio contacta al administrador"
+                );
+            /*Mailgun mailgun = new Mailgun();
             mailgun.sendBasicEmail(
                     "Actualización de su registro de usuario - Tu estado industrial",
                     userRequest.getEmail(),
                     "Se ha realizado una actualización en el registro de tu usuario, si no solicitaste este cambio contacta al administrador"
-            );
+            );*/
             return this.usersRepository.save(userRequest);
         }
         throw new Exception("El usuario no existe");
@@ -268,12 +273,17 @@ public class UserService {
         UserEntity userEntity = this.usersRepository.userAuthentication(passwordRecoveryRequest.getEmail());
         if (userEntity != null) {
             if (userEntity.getEstatus()) {
-                Mailgun mailgun = new Mailgun();
+                //Mailgun mailgun = new Mailgun();
                 String newPassword = this.createRandomPassword();
                 userEntity.setUpdatedAt(new Date());
                 userEntity.setPassword(this.passwordEncoder.encode(newPassword));
                 UserEntity response = this.usersRepository.save(userEntity);
-                mailgun.sendBasicEmail("Recuperación de contraseña - Tu estado industrial", passwordRecoveryRequest.getEmail(), this.passwordRecoveryEmailContent(userEntity.getNombre(), newPassword));
+                //mailgun.sendBasicEmail("Recuperación de contraseña - Tu estado industrial", passwordRecoveryRequest.getEmail(), this.passwordRecoveryEmailContent(userEntity.getNombre(), newPassword));
+                this.emailService.sendEmail(
+                    passwordRecoveryRequest.getEmail(),
+                    "Recuperación de contraseña - Tu estado industrial",
+                    this.passwordRecoveryEmailContent(userEntity.getNombre(), newPassword)
+                    );
                 return response;
             }
             throw new Exception("El usuario ingresado para recuperar la contraseña no está habilitado en la plataforma");

@@ -144,4 +144,22 @@ public class ProfileEntity {
     public void setUsuarios(List<UserEntity> usuarios) {
         this.usuarios = usuarios;
     }
+
+    @Override
+    public String toString() {
+        return "ProfileEntity{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", tipo='" + tipo + '\'' +
+                ", area='" + area + '\'' +
+                ", nivel=" + nivel +
+                ", estatus=" + estatus +
+                ", perfilId=" + perfilId +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", perfiles=" + perfiles +
+                ", permisos=" + permisos +
+                ", usuarios=" + usuarios +
+                '}';
+    }
 }

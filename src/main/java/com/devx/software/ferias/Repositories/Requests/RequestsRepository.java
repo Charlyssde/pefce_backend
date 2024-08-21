@@ -71,6 +71,16 @@ public interface RequestsRepository extends JpaRepository<RequestEntity, Long> {
     List<Object[]> obtenerTotalPorSector();
 
 
-
+    // obtener solicitudes por perfil
+    @Query(
+            value = "SELECT a_solicitudes.* FROM a_solicitudes " +
+                    "WHERE CAST(a_solicitudes.perfil_id as text) = CAST(:perfilId as text) " +
+                    "ORDER BY a_solicitudes.id DESC",
+            nativeQuery = true
+    )
+    Page<RequestEntity> buscarSolicitudesPorPerfil(
+            Pageable pageable,
+            Long perfilId
+    );
 }
 

@@ -229,4 +229,14 @@ public class ProfilesController {
         }
 
     }
+
+    @GetMapping("/institucional")
+    public ResponseEntity<List<ProfileEntity>> getAllInstitutionalProfiles() {
+        try {
+            this.headers.set("200", "Consulta exitosa");
+            return new ResponseEntity<>(this.profileService.getAllByInstitution(), this.headers, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
